@@ -32,7 +32,7 @@ var stringClassMethods = map[string]RubyMethod{
 			}
 			return &String{Value: str.Value}, nil
 		default:
-			return nil, NewWrongNumberOfArgumentsError(len(args), 1)
+			return nil, NewWrongNumberOfArgumentsError(1, len(args))
 		}
 	}),
 }

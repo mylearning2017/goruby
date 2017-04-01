@@ -252,3 +252,29 @@ func TestKernelClass(t *testing.T) {
 		}
 	})
 }
+
+func TestKernelRequire(t *testing.T) {
+	context := NIL
+	name := &String{"foo"}
+
+	result, err := kernelRequire(context, name)
+
+	if err != nil {
+		t.Logf("expected no error, got %T:%v\n", err, err)
+		t.Fail()
+	}
+
+	req, ok := result.(*RequireStatement)
+	if !ok {
+		t.Logf("Expected RequireStatement, got %#v", result)
+		t.FailNow()
+	}
+
+	actual := req.Name.Value
+	expected := "foo"
+
+	if actual != expected {
+		t.Logf("Expected require name to equal %s, got %s", expected, actual)
+		t.Fail()
+	}
+}

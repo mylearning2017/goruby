@@ -14,6 +14,7 @@ const (
 	EIGENCLASS_OBJ         Type = "EIGENCLASS"
 	FUNCTION_OBJ           Type = "FUNCTION"
 	RETURN_VALUE_OBJ       Type = "RETURN_VALUE"
+	REQUIRE_STATEMENT_OBJ  Type = "REQUIRE_STATEMENT"
 	BASIC_OBJECT_OBJ       Type = "BASIC_OBJECT"
 	BASIC_OBJECT_CLASS_OBJ Type = "BASIC_OBJECT_CLASS"
 	OBJECT_OBJ             Type = "OBJECT"
@@ -98,6 +99,21 @@ func (rv *ReturnValue) Inspect() string { return rv.Value.Inspect() }
 
 // Class reurns the class of the wrapped object
 func (rv *ReturnValue) Class() RubyClass { return rv.Value.Class() }
+
+// RequireStatement represents a require call. It is no real Ruby object and
+// only used within the interpreter evaluation.
+type RequireStatement struct {
+	Name *String
+}
+
+// Type returns RETURN_VALUE_OBJ
+func (rs *RequireStatement) Type() Type { return RETURN_VALUE_OBJ }
+
+// Inspect returns the required name as string
+func (rs *RequireStatement) Inspect() string { return rs.Name.Inspect() }
+
+// Class returns nil
+func (rs *RequireStatement) Class() RubyClass { return nil }
 
 // A Function represents a user defined function. It is no real Ruby object.
 type Function struct {

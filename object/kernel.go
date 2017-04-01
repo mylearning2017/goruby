@@ -25,6 +25,7 @@ var kernelMethodSet = map[string]RubyMethod{
 	"methods": withArity(0, publicMethod(kernelMethods)),
 	"class":   withArity(0, publicMethod(kernelClass)),
 	"puts":    privateMethod(kernelPuts),
+	"require": withArity(1, privateMethod(kernelRequire)),
 }
 
 func kernelPuts(context RubyObject, args ...RubyObject) (RubyObject, error) {
@@ -63,4 +64,15 @@ func kernelClass(context RubyObject, args ...RubyObject) (RubyObject, error) {
 	}
 	classObj := class.(RubyClassObject)
 	return classObj, nil
+}
+
+func kernelRequire(context RubyObject, args ...RubyObject) (RubyObject, error) {
+	if len(args) != 1 {
+		return nil, NewWrongNumberOfArgumentsError(1, len(args))
+	}
+	name, ok := args[0].(*String)
+	if !ok {
+		return nil, NewImplicitConversionTypeError(name, args[0])
+	}
+	return &RequireStatement{name}, nil
 }

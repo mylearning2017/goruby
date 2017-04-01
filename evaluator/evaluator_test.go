@@ -525,7 +525,9 @@ func TestRequireExpression(t *testing.T) {
 		x + 2
 		`
 
-		evaluated, err := testEval(input)
+		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
+		evaluated, err := testEval(input, env)
 		checkError(t, err)
 
 		testIntegerObject(t, evaluated, int64(7))
@@ -535,7 +537,9 @@ func TestRequireExpression(t *testing.T) {
 		x + 2
 		`
 
-		evaluated, err := testEval(input)
+		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
+		evaluated, err := testEval(input, env)
 		checkError(t, err)
 
 		testIntegerObject(t, evaluated, int64(7))
@@ -544,7 +548,9 @@ func TestRequireExpression(t *testing.T) {
 		input := `require "testfile.rb"
 		`
 
-		evaluated, err := testEval(input)
+		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
+		evaluated, err := testEval(input, env)
 		checkError(t, err)
 
 		testBooleanObject(t, evaluated, true)
@@ -554,6 +560,7 @@ func TestRequireExpression(t *testing.T) {
 		`
 
 		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
 		_, err := testEval(input, env)
 		checkError(t, err)
 
@@ -566,7 +573,7 @@ func TestRequireExpression(t *testing.T) {
 		arr, ok := loadedFeatures.(*object.Array)
 		if !ok {
 			t.Logf("Expected loadedFeatures to be an array, got %T", loadedFeatures)
-			t.Fail()
+			t.FailNow()
 		}
 
 		expectedLen := 1
@@ -590,7 +597,9 @@ func TestRequireExpression(t *testing.T) {
 			x
 		`
 
-		evaluated, err := testEval(input)
+		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
+		evaluated, err := testEval(input, env)
 		checkError(t, err)
 
 		testIntegerObject(t, evaluated, int64(7))
@@ -600,7 +609,9 @@ func TestRequireExpression(t *testing.T) {
 			require "testfile"
 		`
 
-		evaluated, err := testEval(input)
+		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
+		evaluated, err := testEval(input, env)
 		checkError(t, err)
 
 		testBooleanObject(t, evaluated, false)
@@ -610,7 +621,9 @@ func TestRequireExpression(t *testing.T) {
 		x + 2
 		`
 
-		evaluated, err := testEval(input)
+		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
+		evaluated, err := testEval(input, env)
 		checkError(t, err)
 
 		testIntegerObject(t, evaluated, int64(7))
@@ -619,7 +632,10 @@ func TestRequireExpression(t *testing.T) {
 		input := `require "testfile_syntax_error.rb"
 		`
 
-		evaluated, err := testEval(input)
+		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
+		evaluated, err := testEval(input, env)
+
 		if err == nil {
 			t.Errorf(
 				"no error returned. got=%T(%+v)",
@@ -641,8 +657,9 @@ func TestRequireExpression(t *testing.T) {
 		input := `require "this/file/does/not/exist"
 		`
 
-		evaluated, err := testEval(input)
-
+		env := object.NewEnvironment()
+		env.Set("self", &object.Self{&object.Object{}})
+		evaluated, err := testEval(input, env)
 		if err == nil {
 			t.Errorf(
 				"no error returned. got=%T(%+v)",
