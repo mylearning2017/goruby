@@ -1,6 +1,7 @@
 package evaluator
 
 import (
+	"path/filepath"
 	"reflect"
 	"testing"
 
@@ -556,7 +557,7 @@ func TestRequireExpression(t *testing.T) {
 		testBooleanObject(t, evaluated, true)
 	})
 	t.Run("require appends to $LOADED_FEATURES", func(t *testing.T) {
-		input := `require "testfile.rb"
+		input := `require "./testfile.rb"
 		`
 
 		env := object.NewEnvironment()
@@ -584,7 +585,7 @@ func TestRequireExpression(t *testing.T) {
 			t.Fail()
 		}
 
-		expectedElemValue := "testfile.rb"
+		expectedElemValue, _ := filepath.Abs("testfile.rb")
 		actualElemValue := arr.Elements[0].Inspect()
 
 		if expectedElemValue != actualElemValue {
